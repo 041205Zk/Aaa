@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>🌟 Sıla Göktaş Ultimate Experience 🌟</title>
+    <style>
+        :root {
+            --main-color: #ff4757;
+            --second-color: #2ed573;
+        }
+
+        /* ... Önceki CSS Tanımlarının Hepsi Burada ... */
+
+        /* Yeni Eklenen Collapsible Özellikleri */
+        .collapsible {
+            background: var(--main-color);
+            color: white;
+            padding: 15px;
+            border: none;
+            width: 100%;
+            text-align: left;
+            font-size: 1.2em;
+            border-radius: 10px;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: 0.4s;
+        }
+
+        .collapsible:after {
+            content: '▼';
+            float: right;
+            transition: transform 0.3s;
+        }
+
+        .collapsible.active:after {
+            transform: rotate(180deg);
+        }
+
+        .content {
+            padding: 0 18px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            background: rgba(255,255,255,0.9);
+            border-radius: 0 0 10px 10px;
+        }
+
+        /* Mini Oyun Stilleri */
+        #gameContainer {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.3);
+        }
+
+        #scoreDisplay {
+            font-size: 1.5em;
+            color: var(--main-color);
+        }
+
+        .muz {
+            position: absolute;
+            font-size: 2em;
+            animation: fall 3s linear;
+        }
+
+        @keyframes fall {
+            from { top: -50px; }
+            to { top: 100vh; }
+        }
+    </style>
+</head>
+<body>
+    <!-- ... Önceki HTML İçeriği Burada ... -->
+
+    <!-- Yeni Eklenen Collapsible Bölümler -->
+    <div class="container">
+        <button class="collapsible">📚 Göktaş Arşivi (Tıkla Aç)</button>
+        <div class="content">
+            <p>🔒 Gizli Dosya #1: Sıla'nın 158cm'lik boyu 3 kıtada resmi olarak kayıtlı!</p>
+            <button onclick="showEmojiRain()">🌧️ Emoji Yağmuru Başlat</button>
+        </div>
+
+        <button class="collapsible">🎮 Mini Oyunlar</button>
+        <div class="content">
+            <div id="gameContainer">
+                <h3>🍌 Muz Toplama Oyunu</h3>
+                <p id="scoreDisplay">Skor: 0</p>
+                <button onclick="startMuzGame()">OYUNU BAŞLAT</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ... Önceki JavaScript Fonksiyonları ...
+
+        // Collapsible Buton Sistemi
+        document.querySelectorAll('.collapsible').forEach(button => {
+            button.addEventListener('click', function() {
+                this.classList.toggle('active');
+                const content = this.nextElementSibling;
+                content.style.maxHeight = content.style.maxHeight ? null : content.scrollHeight + 'px';
+            });
+        });
+
+        // Yeni Mini Oyun Sistemi
+        let score = 0;
+        
+        function startMuzGame() {
+            score = 0;
+            document.getElementById('scoreDisplay').textContent = `Skor: ${score}`;
+            
+            const gameContainer = document.getElementById('gameContainer');
+            gameContainer.style.width = '300px';
+            
+            const muzInterval = setInterval(() => {
+                const muz = document.createElement('div');
+                muz.className = 'muz';
+                muz.textContent = '🍌';
+                muz.style.left = Math.random() * 250 + 'px';
+                muz.onclick = () => {
+                    score++;
+                    document.getElementById('scoreDisplay').textContent = `Skor: ${score}`;
+                    muz.remove();
+                    new Audio('https://assets.mixkit.co/active_storage/sfx/2219/2219-preview.mp3').play();
+                };
+                gameContainer.appendChild(muz);
+
+                setTimeout(() => {
+                    if(muz.parentElement) muz.remove();
+                }, 3000);
+            }, 1000);
+
+            setTimeout(() => {
+                clearInterval(muzInterval);
+                alert(`Oyun Bitti! Topladığınız Muz: ${score} 🏆`);
+            }, 10000);
+        }
+
+        // Gizli Emoji Yağmuru
+        function showEmojiRain() {
+            const emojis = ['🍌', '🦒', '🌟', '📏', '🐧'];
+            for(let i = 0; i < 100; i++) {
+                const emoji = document.createElement('div');
+                emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                emoji.style.position = 'fixed';
+                emoji.style.left = Math.random() * 100 + 'vw';
+                emoji.style.animation = `fall ${Math.random() * 2 + 1}s linear`;
+                emoji.style.fontSize = '2em';
+                document.body.appendChild(emoji);
+                
+                setTimeout(() => emoji.remove(), 2000);
+            }
+        }
+
+        // Easter Egg: Gizli Kombinasyon
+        let konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight'];
+        let keyHistory = [];
+        
+        document.addEventListener('keydown', (e) => {
+            keyHistory.push(e.key);
+            if(keyHistory.slice(-8).join('') === konamiCode.join('')) {
+                document.body.style.background = 'linear-gradient(45deg, #ff00ff, #00ffff)';
+                alert('🎉 Gizli Kombinasyon Bulundu! Ultra Göktaş Modu Aktif!');
+            }
+        });
+    </script>
+</body>
+</html>
